@@ -2,24 +2,10 @@ import React from "react";
 import "./MoviesApp.css";
 
 export default class MovieList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: props.movies
-    };
-    this.removeMovie = this.removeMovie.bind(this);
-  }
-
-  removeMovie(id) {
-    this.setState(state => ({
-      movies: state.movies.filter(movie => movie.id !== id)
-    }));
-  }
-
   render() {
-    const { movies } = this.state;
-    const result = movies.map(movie => (
-      <Movie key={movie.id} movie={movie} removeMovie={this.removeMovie} />
+    const { removeMovie, filteredMovies } = this.props;
+    const result = filteredMovies.map(movie => (
+      <Movie key={movie.id} movie={movie} removeMovie={removeMovie} />
     ));
     return <div className="Movies">{result}</div>;
   }
