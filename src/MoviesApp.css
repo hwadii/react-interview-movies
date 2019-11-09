@@ -1,0 +1,83 @@
+body {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.Movies {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.Movie {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200px;
+  height: 200px;
+  min-width: 200px;
+  margin: 5px;
+  padding: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+
+.Movie-rating__innerProgressBar {
+  background-color: #ddd;
+  width: 100%;
+}
+
+.Movie-rating__progressBar {
+  text-align: center;
+  background-color: #5cb85c;
+  height: 10px;
+  color: black;
+}
+
+.Movie-category {
+  font-style: italic;
+  display: inline;
+  padding: 0 12px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  text-transform: lowercase;
+}
+
+.Movie-delete {
+  color: rgb(124, 124, 124);
+  display: block;
+  position: absolute;
+  font-size: 1.4rem;
+  right: 0.3em;
+  top: 0;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.Movie-rating__likesDislikes {
+  display: flex;
+  justify-content: space-evenly;
+  margin: .5rem 0;
+}
+
+.Movie-rating__thumb {
+  color: rgb(124, 124, 124);
+  cursor: pointer;
+}
+
+.Movie-rating__thumbsUp, .Movie-rating__thumbsDown {
+  color: #333;
+}
+
+.Movie-rating__thumb:hover, .Movie-delete:hover {
+  color: #333;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.fas {
+  font-size: 1.6rem;
+}
