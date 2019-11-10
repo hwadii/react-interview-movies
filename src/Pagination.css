@@ -1,0 +1,38 @@
+.Pagination {
+  display: inline-block;
+  margin: 1rem auto;
+}
+
+.Selection {
+  appearance: none;
+  margin: 0 1rem;
+  border: none;
+  padding: 0.4rem .5rem;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+}
+
+.Pages {
+  display: inline-block;
+  padding: 0.1rem 0;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+}
+
+.Page-element {
+  display: inline-block;
+  user-select: none;
+  padding: 0.5rem 0.5rem;
+}
+
+.Page-active {
+  color: #0275d8;
+  text-decoration: underline;
+}
+
+.Page-element:hover {
+  color: #0275d8;
+  cursor: pointer;
+}
