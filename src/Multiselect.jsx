@@ -65,23 +65,24 @@ function CategoriesMultiselect({ handler, open, data, toggler }) {
 
 function CategoriesBox({ open, categories, handleFilterChange }) {
   return (
-    open && (
-      <div className="Bar-multiselect__box">
-        <ul className="Bar-multiselect__list">
-          {categories.map((category, idx) => (
-            <li className="Bar-multiselect__element" key={idx}>
-              <label className="Bar-multiselect__label">
-                <input
-                  type="checkbox"
-                  onClick={() => handleFilterChange(category)}
-                />
-                {category}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )
+    <div
+      style={{ display: open ? "block" : "none" }}
+      className="Bar-multiselect__box"
+    >
+      <ul className="Bar-multiselect__list">
+        {categories.map((category, idx) => (
+          <li className="Bar-multiselect__element" key={idx}>
+            <label className="Bar-multiselect__label">
+              <input
+                type="checkbox"
+                onClick={() => handleFilterChange(category)}
+              />
+              {category}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
