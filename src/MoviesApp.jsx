@@ -1,42 +1,54 @@
 import React from "react";
 import MovieList from "./MovieList";
+import Pagination from "./Pagination";
 import Multiselect from "./Multiselect";
 import "./MoviesApp.css";
 import { movies$ } from "./movies";
 import { map, uniqBy } from "lodash";
+import util from "./util/util";
 
 class MoviesApp extends React.Component {
   constructor() {
     super();
     this.state = {
       movies: [],
-      filteredMovies: [],
-      isLoading: true,
       categories: [],
-      filteredCategories: []
+      filteredMovies: [],
+      filteredCategories: [],
+      pages: 0,
+      elementsPerPage: 4,
+      currentPage: 1,
+      isLoading: true
     };
     this.removeMovie = this.removeMovie.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handlePageChange = this.handlePageChange.bind(this);
+    this.changeElementsPerPage = this.changeElementsPerPage.bind(this);
   }
 
   componentDidMount() {
     movies$.then(movies => {
-      this.setState({
-        movies,
-        filteredMovies: [...movies],
-        isLoading: false,
-        categories: map(uniqBy(movies, "category"), "category")
+      this.setState(state => {
+        // const moviesWithRating = movies.map(movie => (movie["rating"] = ""));
+        return {
+          movies,
+          pages: util.computePages(movies.length, state.elementsPerPage),
+          filteredMovies: [...movies],
+          isLoading: false,
+          categories: map(uniqBy(movies, "category"), "category")
+        };
       });
     });
   }
 
   removeMovie(id) {
     this.setState(state => {
-      const newMovies = state.movies.filter(movie => movie.id !== id);
+      const movies = state.movies.filter(movie => movie.id !== id);
       return {
-        movies: newMovies,
-        filteredMovies: [...newMovies],
-        categories: map(uniqBy(newMovies, "category"), "category")
+        movies,
+        filteredMovies: [...movies],
+        categories: map(uniqBy(movies, "category"), "category"),
+        pages: util.computePages(movies.length, state.elementsPerPage)
       };
     });
   }
@@ -49,15 +61,13 @@ class MoviesApp extends React.Component {
   updateFilters(filter) {
     this.setState(state => {
       const { filteredCategories } = state;
-      if (filteredCategories.includes(filter)) {
+      if (filteredCategories.includes(filter))
         return {
           filteredCategories: filteredCategories.filter(f => f !== filter)
         };
-      } else {
-        return {
-          filteredCategories: [...filteredCategories, filter]
-        };
-      }
+      return {
+        filteredCategories: [...filteredCategories, filter]
+      };
     });
   }
 
@@ -72,17 +82,41 @@ class MoviesApp extends React.Component {
             .concat(filteredMovies);
         });
         return {
-          filteredMovies
+          filteredMovies,
+          pages: util.computePages(filteredMovies.length, state.elementsPerPage)
         };
       }
       return {
-        filteredMovies: state.movies
+        filteredMovies: state.movies,
+        pages: util.computePages(state.movies.length, state.elementsPerPage)
       };
     });
   }
 
+  changeElementsPerPage(event) {
+    const value = event.target.value;
+    console.log(value);
+    this.setState(state => {
+      return {
+        elementsPerPage: value,
+        pages: util.computePages(state.movies.length, value)
+      };
+    });
+  }
+
+  handlePageChange(direction) {
+    this.setState(state => {
+      const { currentPage, pages } = state;
+      if (
+        (direction === 1 && currentPage < pages) ||
+        (direction === -1 && currentPage > 1)
+      )
+        return { currentPage: currentPage + direction };
+    });
+  }
+
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, pages, currentPage, elementsPerPage } = this.state;
     return (
       !isLoading && (
         <div className="MoviesApp">
@@ -90,7 +124,18 @@ class MoviesApp extends React.Component {
             {...this.state}
             handleFilterChange={this.handleFilterChange}
           />
-          <MovieList {...this.state} removeMovie={this.removeMovie} />
+          <Pagination
+            currentPage={currentPage}
+            pages={pages}
+            elementsPerPage={elementsPerPage}
+            handlePageChange={this.handlePageChange}
+            handleElementsChange={this.changeElementsPerPage}
+          />
+          <MovieList
+            {...this.state}
+            removeMovie={this.removeMovie}
+            handlePageChange={this.handlePageChange}
+          />
         </div>
       )
     );
