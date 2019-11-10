@@ -31,17 +31,22 @@ export default class Movie extends React.Component {
   render() {
     const { movie, removeMovie } = this.props;
     const { rated } = this.state;
-
     return (
       <div className="Movie">
-        <div onClick={() => removeMovie(movie.id)} className="Movie-delete">
-          &times;
-        </div>
+        <MovieAction id={movie.id} handler={removeMovie} />
         <MovieDetails title={movie.title} category={movie.category} />
         <MovieRating movie={movie} rated={rated} handler={this.handleRating} />
       </div>
     );
   }
+}
+
+function MovieAction({ id: movieId, handler }) {
+  return (
+    <div onClick={() => handler(movieId)} className="Movie-delete">
+      &times;
+    </div>
+  );
 }
 
 function MovieDetails({ title, category }) {
@@ -53,44 +58,50 @@ function MovieDetails({ title, category }) {
   );
 }
 
-function MovieRating({ movie, rated, handler }) {
-  const ratio = (100 * movie.likes) / (movie.likes + movie.dislikes);
+function MovieRating({ movie, handler, rated }) {
   return (
     <div className="Movie-rating">
-      <div className="Movie-rating__likesDislikes">
-        <Thumbs rated={rated} movie={movie} handler={handler}>
-          <ThumbButton type="likes" />
-          <ThumbButton type="dislikes" />
-        </Thumbs>
-        {/* <Thumbs rated={rated} movie={movie} type="dislikes" handler={handler} /> */}
-      </div>
-      <div className="Movie-rating__innerProgressBar">
-        <div
-          style={{ width: `${ratio}%` }}
-          className="Movie-rating__progressBar"
-        ></div>
-      </div>
+      <Thumbs handler={handler} movie={movie} rated={rated} />
+      <Bar likes={movie.likes} dislikes={movie.dislikes} />
     </div>
   );
 }
 
-function Thumbs({ movie, rated, type, handler, children }, props) {
-  console.log(props.children);
-  return <div>{props.children}</div>;
+function Bar({ likes, dislikes }) {
+  const ratio = (100 * likes) / (likes + dislikes);
+  return (
+    <div className="Movie-rating__innerProgressBar">
+      <div
+        style={{ width: `${ratio}%` }}
+        className="Movie-rating__progressBar"
+      ></div>
+    </div>
+  );
 }
 
-function ThumbButton({ type }) {
-  // <div
-  //   onClick={() => handler(type)}
-  //   className={
-  //     rated === type
-  //       ? "Movie-rating__thumb Movie-rating__thumbActive"
-  //       : "Movie-rating__thumb"
-  //   }
-  // >
-  return <ThumbIcon type={type} />;
-  //   &nbsp;{movie[type]}
-  // </div>;
+function Thumbs({ rated, movie, handler }) {
+  const Thumb = ({ type }) => {
+    return (
+      <div
+        onClick={() => handler(type)}
+        className={
+          rated === type
+            ? "Movie-rating__thumb Movie-rating__thumbActive"
+            : "Movie-rating__thumb"
+        }
+      >
+        <ThumbIcon type={type} />
+        &nbsp;{movie[type]}
+      </div>
+    );
+  };
+
+  return (
+    <div className="Movie-rating__likesDislikes">
+      <Thumb type="likes" />
+      <Thumb type="dislikes" />
+    </div>
+  );
 }
 
 function ThumbIcon({ type }) {

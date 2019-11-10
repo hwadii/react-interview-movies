@@ -75,12 +75,12 @@ body {
 }
 
 .Movie-rating__thumbActive {
-  color: #333;
+  color: #0275d8;
 }
 
 .Movie-rating__thumb:hover,
 .Movie-delete:hover {
-  color: #333;
+  color: #0275d8;
   transition: 0.5s;
   cursor: pointer;
 }
